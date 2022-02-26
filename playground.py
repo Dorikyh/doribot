@@ -1,5 +1,6 @@
-
-from forex_python.bitcoin import BtcConverter
-b = BtcConverter() # force_decimal=True to get Decimal rates
-val = "{:,.2f}".format(b.get_latest_price('USD'))
-print(val)
+#python 3.x
+text = input("enter a string to convert into ascii values:")
+ascii_values = []
+for character in text:
+    ascii_values.append(ord(character))
+print(ascii_values)

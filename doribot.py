@@ -1,7 +1,5 @@
 ## Here start my beutiful code :3
 
-from cv2 import mean
-
 import discord
 from gnewsclient import gnewsclient
 import wikipedia
@@ -10,6 +8,8 @@ import time
 import discord
 import random
 import asyncio
+from mcstatus import MinecraftServer
+import re
 
 from forex_python.bitcoin import BtcConverter
 
@@ -89,9 +89,9 @@ async def cmd2(ctx):
     embed.add_field(name=":coin: CoinFlip", value="Heads or tails random gen.")
     embed.add_field(name=":1234: Randint", value="Random number, 0 up 100.")
     embed.add_field(name=":coin: BTC", value="Get the bitcoin value.")
-    embed.add_field(name=":coin: ETHER", value="Get the ethereum value.")
-    embed.add_field(name=":small_red_triangle: Count", value="Just count...")
-    embed.add_field(name=":small_red_triangle_down: Uncount", value="Just subtract...")
+    embed.add_field(name=":zero: Binary", value="Convert text to binary.")
+    embed.add_field(name=":u7a7a: ASCII", value="Text to ASCII code.")
+    embed.add_field(name=":ping_pong: MCServ", value="Minecraft server status.")
 
     embed.set_footer(text='Use .info <cmd> to get more info.')
     embed.timestamp = datetime.datetime.utcnow()
@@ -125,6 +125,18 @@ async def count(ctx):
 
 
 @client.command()
+async def mcserv(ctx, *, arg1):
+    server = MinecraftServer.lookup(arg1)
+
+    status = server.status()
+    print(f"The server has {status.players.online} players and replied in {status.latency} ms")
+    embed = discord.Embed(title=f":ping_pong: Minecraft server {arg1}", description=f"The server {arg1} has {status.players.online} players online, server replied in {int(status.latency)}ms", color=0x77dd77)
+    embed.set_footer(text='MCStatus')
+    embed.timestamp = datetime.datetime.utcnow()
+    await ctx.send(embed=embed)
+
+
+@client.command()
 async def uncount(ctx):
     global county
     county = county - 1 
@@ -142,8 +154,18 @@ async def randint(ctx):
 
 
 
+@client.command()
+async def binary(ctx, *, args):
+    if len(args) <= 255:
+        res = ''.join(format(ord(i), '08b') for i in args)
 
-
+        embed = discord.Embed(title=f":zero: Binary convert", description=f"```{res}```", color=0xffffed)
+        embed.timestamp = datetime.datetime.utcnow()
+        await ctx.send(embed=embed)
+    else:
+        embed = discord.Embed(title=f":no_entry_sign: Error", description=f"The text entered is too long.", color=0xffffed)
+        embed.timestamp = datetime.datetime.utcnow()
+        await ctx.send(embed=embed)
 
 
 @client.command()
@@ -227,8 +249,8 @@ async def climate(ctx, *, args):
 async def btc(ctx):
     b = BtcConverter() # force_decimal=True to get Decimal rates
     val = "{:,.2f}".format(b.get_latest_price('USD'))
-
     embed=discord.Embed(title=f":chart: Bitcoin value ", description=f"Right now the bitcoin value is: ${val}", color=0xb3e6b5)
+    embed.timestamp = datetime.datetime.utcnow()
     await ctx.send(embed=embed)
 
 
@@ -276,6 +298,18 @@ async def to_en(ctx, *, args):
     embed.set_footer(text='Google Translate API')
     await ctx.send(embed=embed)
     print(f"Translate command executed: {args}") 
+
+
+@client.command()
+async def ascii(ctx, *, args):
+    ascii_values = []
+    for character in args:
+        ascii_values.append(ord(character))
+
+    embed = discord.Embed(title=f":u7a7a: Text to ASCII", description=f"```{ascii_values}```", color=0x405fdd)
+    embed.timestamp = datetime.datetime.utcnow()
+    embed.set_footer(text='ASCII Translate')
+    await ctx.send(embed=embed)
 
 
 @client.command()
