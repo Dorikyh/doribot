@@ -37,7 +37,7 @@ client.remove_command('help')
 
 @client.event
 async def on_ready():
-    print("\n\n\nBot online!\n")
+    print(f"\n==================\nBot online!\nLogged as: {client.user.name}\n==================\n")
     await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name='*cmd'))
 
 @client.command()
@@ -55,7 +55,7 @@ async def cmd(ctx):
     embed.set_footer(text='Use info <cmd> to get more info.')
     embed.timestamp = datetime.datetime.utcnow()
     await ctx.send(embed=embed)
-    print("[EXC] General help command list 1.")
+    print("[EXC] General help list 1")
 
 
 
@@ -75,7 +75,7 @@ async def acmd(ctx):
     embed.set_footer(text='Use info <cmd> to get more info.')
     embed.timestamp = datetime.datetime.utcnow()
     await ctx.send(embed=embed)
-    print("[EXC] Admin command list.")
+    print("[EXC] Admin help list 1")
 
 
 
@@ -96,7 +96,7 @@ async def cmd2(ctx):
     embed.set_footer(text='Use .info <cmd> to get more info.')
     embed.timestamp = datetime.datetime.utcnow()
     await ctx.send(embed=embed)
-    print("Help command page 2 executed")
+    print("[EXC] General help list 2")
 
 
 
@@ -111,7 +111,7 @@ async def coinflip(ctx):
         embed = discord.Embed(title=f":yellow_circle: Random: Tails!", description=f"This result has been randomly generated.", color=0xf04f08)
         embed.timestamp = datetime.datetime.utcnow()
         await ctx.send(embed=embed)
-    print(f"Coinflip command executed: {hos}")
+    print(f"[EXC] Coinflip: {hos}")
 
 county = 0
 
@@ -122,6 +122,7 @@ async def count(ctx):
     embed = discord.Embed(title=f":small_red_triangle: +1 Count!", description=f"Now counter is: {county}", color=0x808080)
     print(f"Count command: {county}")
     await ctx.send(embed=embed)
+    print(f"[EXC] Count: {county}")
 
 
 @client.command()
@@ -129,11 +130,11 @@ async def mcserv(ctx, *, arg1):
     server = MinecraftServer.lookup(arg1)
 
     status = server.status()
-    print(f"The server has {status.players.online} players and replied in {status.latency} ms")
     embed = discord.Embed(title=f":ping_pong: Minecraft server {arg1}", description=f"The server {arg1} has {status.players.online} players online, server replied in {int(status.latency)}ms", color=0x77dd77)
     embed.set_footer(text='MCStatus')
     embed.timestamp = datetime.datetime.utcnow()
     await ctx.send(embed=embed)
+    print(f"[EXC] MCServ: {arg1} {status.players.online} {status.latency}")
 
 
 @client.command()
@@ -141,16 +142,16 @@ async def uncount(ctx):
     global county
     county = county - 1 
     embed = discord.Embed(title=f":small_red_triangle_down: -1 Count!", description=f"Now counter is: {county}", color=0x808080)
-    print(f"Count command: {county}")
     await ctx.send(embed=embed)
+    print(f"[EXC] Uncount: {county}")
 
 @client.command()
 async def randint(ctx):
     ran = random.randint(0, 100)
     embed = discord.Embed(title=f"Random number: {ran}", description=f"This result has been randomly generated.", color=0xffffed)
-    print(f"Random int generated: {ran}")
     embed.timestamp = datetime.datetime.utcnow()
     await ctx.send(embed=embed)
+    print(f"[EXC] Randint: {ran}")
 
 
 
@@ -162,17 +163,20 @@ async def binary(ctx, *, args):
         embed = discord.Embed(title=f":zero: Binary convert", description=f"```{res}```", color=0xffffed)
         embed.timestamp = datetime.datetime.utcnow()
         await ctx.send(embed=embed)
+        print(f"[EXC] Binary: {args}")
+
     else:
         embed = discord.Embed(title=f":no_entry_sign: Error", description=f"The text entered is too long.", color=0xffffed)
         embed.timestamp = datetime.datetime.utcnow()
         await ctx.send(embed=embed)
+        print(f"[ERR] Too much text")
 
 
 @client.command()
 async def ping(ctx):
     embed = discord.Embed(title=f"Pong!  🏓 {arg}", description=f":bell: {round(client.latency * 1000)}ms", color=0xf28f18)
     await ctx.send(embed=embed)
-    print("Ping command executed")
+    print(f"[EXC] Ping: {round(client.latency * 1000)}ms.")
 
 
 @client.command()
@@ -189,7 +193,7 @@ async def news(ctx, arg1, arg2, arg3):
     embed.timestamp = datetime.datetime.utcnow()
     embed.set_footer(text='Google News')
     await ctx.send(embed=embed)
-    print(f"News command executed") 
+    print(f"[EXC] GNews: {arg2}")
 
 
 
@@ -203,7 +207,7 @@ async def wiki_en(ctx, *, args):
     embed.timestamp = datetime.datetime.utcnow()
     embed.set_footer(text='Wikipedia API')
     await ctx.send(embed=embed)
-    print(f"Wikipedia command executed: {args}") 
+    print(f"[EXC] WikiEn: {rslt.title}")
 
 
 @client.command()
@@ -241,7 +245,7 @@ async def climate(ctx, *, args):
     embed.timestamp = datetime.datetime.utcnow()
     embed.set_footer(text='Google Weather')
     await ctx.send(embed=embed)
-    print(f"Weather command executed: {args}") 
+    print(f"[EXC] Weather: {city}")
 
 
 
@@ -252,7 +256,7 @@ async def btc(ctx):
     embed=discord.Embed(title=f":chart: Bitcoin value ", description=f"Right now the bitcoin value is: ${val}", color=0xb3e6b5)
     embed.timestamp = datetime.datetime.utcnow()
     await ctx.send(embed=embed)
-
+    print(f"[EXC] BTC: {val}")
 
 @client.command()
 @commands.check(is_owner)
@@ -273,7 +277,7 @@ async def wiki_es(ctx, *, args):
     embed.timestamp = datetime.datetime.utcnow()
     embed.set_footer(text='Wikipedia API')
     await ctx.send(embed=embed)
-    print(f"Wikipedia command executed: {args}") 
+    print(f"[EXC] WikiEs: {rslt.title}")
 
 @client.command()
 async def to_es(ctx, *, args):
@@ -284,7 +288,7 @@ async def to_es(ctx, *, args):
     embed.set_thumbnail(url="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Google_Translate_logo.svg/2048px-Google_Translate_logo.svg.png")
     embed.set_footer(text='Google Translate API')
     await ctx.send(embed=embed)
-    print(f"Translate command executed: {args}") 
+    print(f"[EXC] ToEs: {args}")
 
 
 
@@ -297,7 +301,7 @@ async def to_en(ctx, *, args):
     embed.set_thumbnail(url="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Google_Translate_logo.svg/2048px-Google_Translate_logo.svg.png")
     embed.set_footer(text='Google Translate API')
     await ctx.send(embed=embed)
-    print(f"Translate command executed: {args}") 
+    print(f"[EXC] ToEn: {args}")
 
 
 @client.command()
@@ -310,6 +314,7 @@ async def ascii(ctx, *, args):
     embed.timestamp = datetime.datetime.utcnow()
     embed.set_footer(text='ASCII Translate')
     await ctx.send(embed=embed)
+    print(f"[EXC] ASCII: {args}")
 
 
 @client.command()
@@ -323,7 +328,7 @@ async def info(ctx, arg):
         embed.timestamp = datetime.datetime.utcnow()
         embed.set_footer(text='Wikipedia API command help.')
         await ctx.send(embed=embed)
-        print("Wiki help command executed")
+        print(f"[EXC] Info Wiki")
 
 
     elif arg == "news":
@@ -336,7 +341,7 @@ async def info(ctx, arg):
         embed.timestamp = datetime.datetime.utcnow()
         embed.set_footer(text='Wikipedia API command help.')
         await ctx.send(embed=embed)
-        print("News help command executed")
+        print(f"[EXC] Info GNews")
 
 
     elif arg == "to_es" or arg == "to_en": # Translate command
@@ -348,7 +353,7 @@ async def info(ctx, arg):
         embed.timestamp = datetime.datetime.utcnow()
         embed.set_footer(text='Google Translate command help.')
         await ctx.send(embed=embed)
-        print("Translate help command executed")
+        print(f"[EXC] Info ToEs")
 
 
     elif arg == "climate" or arg == "weather": # Weather command set
@@ -360,14 +365,14 @@ async def info(ctx, arg):
         embed.timestamp = datetime.datetime.utcnow()
         embed.set_footer(text='Google Weather command help.')
         await ctx.send(embed=embed)
-        print("Weather help command executed")
+        print(f"[EXC] Info climate")
 
 
 @client.command(name='eval')
 @commands.check(is_owner)
 async def _eval(ctx, *, code):
-    embed = discord.Embed(title=f"Eval code", description=f":white_small_square: Result: {eval(code)}", color=0xccc9ca)
+    embed = discord.Embed(title=f"Eval code", description=f":symbols: **Input:** ```{code}```\n:arrow_right: **Output**: ```{eval(code)}```", color=0xccc9ca)
+    embed.timestamp = datetime.datetime.utcnow()
     await ctx.send(embed=embed)
-
 
 client.run((token))  
