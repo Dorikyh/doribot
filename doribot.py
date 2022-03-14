@@ -22,7 +22,7 @@ from discord.ext import commands, tasks
 from discord.ext.commands import has_permissions,  CheckFailure, check
 import datetime
 
-token = "ODg5NTQwMDYyOTU2NjM0MTY0.YUiuvQ.j1LLsiZfRz8xeAjWwnD2eDiqd0A"
+token = "TOKEN"
 
 async def is_owner(ctx):
     return ctx.author.id == 841368898146402355 # Dorikyh#0018 ID
@@ -35,6 +35,8 @@ client = discord.Client()
 client = commands.Bot(command_prefix = '*')
 client.remove_command('help')
 
+user = discord.utils.get(client.get_all_members(), id='1234')
+
 @client.event
 async def on_ready():
     print(f"\n==================\nBot online!\nLogged as: {client.user.name}\n==================\n")
@@ -42,9 +44,10 @@ async def on_ready():
 
 @client.command()
 async def cmd(ctx):
-    embed = discord.Embed(title=":gear: User command list page 1",
-    description="User command list 2 available. \nThe command prefix is `*` (Do not use caps)", color=0x8ee5ee)
- 
+    embed = discord.Embed(title=":gear: Page 1 | Bot prefix: `*`",
+    description="Global command list bot available.", color=0x8ee5ee)
+    embed.set_author(name="Doribot | User command list" , icon_url="https://i.ibb.co/RjSB9LD/external-content-duckduckgo.png")
+    
     embed.add_field(name=":newspaper: News", value="Get the breaking news of your city.")
     embed.add_field(name=":scroll: Wiki_en", value="English search in wikipedia.")
     embed.add_field(name=":scroll: Wiki_es", value="Spanish search in wikipedia.")
@@ -76,7 +79,6 @@ async def acmd(ctx):
     embed.timestamp = datetime.datetime.utcnow()
     await ctx.send(embed=embed)
     print("[EXC] Admin help list 1")
-
 
 
 
@@ -125,6 +127,7 @@ async def count(ctx):
     print(f"[EXC] Count: {county}")
 
 
+
 @client.command()
 async def mcserv(ctx, *, arg1):
     server = MinecraftServer.lookup(arg1)
@@ -132,9 +135,13 @@ async def mcserv(ctx, *, arg1):
     status = server.status()
     embed = discord.Embed(title=f":ping_pong: Minecraft server {arg1}", description=f"The server {arg1} has {status.players.online} players online, server replied in {int(status.latency)}ms", color=0x77dd77)
     embed.set_footer(text='MCStatus')
-    embed.timestamp = datetime.datetime.utcnow()
-    await ctx.send(embed=embed)
-    print(f"[EXC] MCServ: {arg1} {status.players.online} {status.latency}")
+    embed.set_author
+    if int(status.latency) <= 1:
+        print("error")
+    else:
+        embed.timestamp = datetime.datetime.utcnow()
+        await ctx.send(embed=embed)
+        print(f"[EXC] MCServ: {arg1} {status.players.online} {status.latency}")
 
 
 @client.command()
@@ -156,7 +163,7 @@ async def randint(ctx):
 
 
 @client.command()
-async def binary(ctx, *, args):
+async def bin(ctx, *, args):
     if len(args) <= 255:
         res = ''.join(format(ord(i), '08b') for i in args)
 
@@ -175,8 +182,47 @@ async def binary(ctx, *, args):
 @client.command()
 async def ping(ctx):
     embed = discord.Embed(title=f"Pong!  🏓 {arg}", description=f":bell: {round(client.latency * 1000)}ms", color=0xf28f18)
+    embed.timestamp = datetime.datetime.utcnow()
+    embed.set_image(url="https://www1-lw.xda-cdn.com/files/2017/05/stack-overflow.png")
     await ctx.send(embed=embed)
     print(f"[EXC] Ping: {round(client.latency * 1000)}ms.")
+
+
+
+@client.command()
+async def niwi(ctx):
+    client = gnewsclient.NewsClient(language="spanish",
+	    							location="colombia",
+    								topic="politics",
+    								max_results=1)
+
+    newz = client.get_news()
+    embed = discord.Embed(title=f":newspaper: {newz['title']}", description=f"{newz['description']}", color=0xe2be5a)
+    embed.timestamp = datetime.datetime.utcnow()
+    embed.set_image(url=f"{newz['image']}")
+    embed.set_footer(text='Google News')
+    print(f"[EXC] GNews testing")
+    await ctx.send(embed=embed)
+
+
+@client.command()
+async def testing(ctx):
+    embed = discord.Embed(title=f"Daily newsletter", description=f"Daily newsletter with useful information, breaking news and more.", color=0xf28f18)
+    embed.timestamp = datetime.datetime.utcnow()
+    
+    b = BtcConverter() # force_decimal=True to get Decimal rates
+    val = "{:,.2f}".format(b.get_latest_price('USD'))
+    
+    embed.add_field(name="Bitcoin value", value="Right now the bitcoin value is: ${val}")
+    
+    await ctx.send(embed=embed)
+
+
+# sending dm
+@client.command()
+async def nwsletter(ctx):
+    await ctx.author.send('Boop!!')
+
 
 
 @client.command()
@@ -189,11 +235,11 @@ async def news(ctx, arg1, arg2, arg3):
     news_list = client.get_news()
     embed = discord.Embed(title=f":newspaper: Google News API", description=f"Breaking news of {arg2} in {arg3} topic.", color=0xe2be5a, url="https://news.google.com")
     for item in news_list:
-        embed.add_field(name=f":newspaper2: Breaking news", value= f"{item['title']}")
+        embed.add_field(name=f":newspaper2: Breaking news", value= f"{item['title']} - [Link]({item['link']})")
     embed.timestamp = datetime.datetime.utcnow()
     embed.set_footer(text='Google News')
-    await ctx.send(embed=embed)
     print(f"[EXC] GNews: {arg2}")
+    await ctx.send(embed=embed)
 
 
 
@@ -264,6 +310,7 @@ async def clear(ctx , amount=5):
     await ctx.channel.purge(limit=amount + 1)
     embed=discord.Embed(title=f":wastebasket: Delete command", description=f"You have been deleted {amount} messages.", color=0xFF4C4C)
     await ctx.send(embed=embed, delete_after=3)
+    print(f"[EXC] Clear: {amount}")
 
 
 
@@ -273,6 +320,7 @@ async def wiki_es(ctx, *, args):
     result = wikipedia.summary(args, sentences=2)
     rslt = wikipedia.page(args)
     embed=discord.Embed(title=f":scroll: Wikipedia: {rslt.title}", url=rslt.url, description=f"{result}", color=0xe2be5a)
+    embed.set_author(name="Doribot | Spanish Wikipedia" , icon_url="https://i.ibb.co/RjSB9LD/external-content-duckduckgo.png")
     embed.set_thumbnail(url="https://clipground.com/images/wikipedia-logo-7.png")
     embed.timestamp = datetime.datetime.utcnow()
     embed.set_footer(text='Wikipedia API')
@@ -374,5 +422,6 @@ async def _eval(ctx, *, code):
     embed = discord.Embed(title=f"Eval code", description=f":symbols: **Input:** ```{code}```\n:arrow_right: **Output**: ```{eval(code)}```", color=0xccc9ca)
     embed.timestamp = datetime.datetime.utcnow()
     await ctx.send(embed=embed)
+    print(f"[EXC] Eval: {code}")
 
 client.run((token))  

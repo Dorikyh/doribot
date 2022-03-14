@@ -1,6 +1,17 @@
-#python 3.x
-text = input("enter a string to convert into ascii values:")
-ascii_values = []
-for character in text:
-    ascii_values.append(ord(character))
-print(ascii_values)
+
+import namemcpy 
+example = namemcpy()
+test = example.usernameToUuid("dorikyh")
+print(test)
+
+
+
+
+"""
+from PyDictionary import PyDictionary
+dicty=PyDictionary()
+
+thing = dicty.meaning("python")
+print(thing)
+"""
+
